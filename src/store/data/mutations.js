@@ -18,6 +18,23 @@ export function updateParroquia (state,data) {
 export function updateOficina (state,data) {
     state.dataSelected.oficina = data
 }
+export function updateOtherData (state,data) {
+    state.dataSelected.destinatario= data.destinatario,
+    state.dataSelected.contacto= data.contacto,
+    state.dataSelected.cirif= data.cirif,
+    state.dataSelected.telefono= data.telefono,
+    state.dataSelected.direccion= data.direccion,
+    state.dataSelected.inmueble= data.inmueble,
+    state.dataSelected.descripcionPaquete= data.descripcionPaquete,
+    state.dataSelected.referencia= data.referencia,
+    state.dataSelected.numeroPiezas= data.numeroPiezas,
+    state.dataSelected.peso= data.peso,
+    state.dataSelected.tipoEnvio= data.tipoEnvio,
+    state.dataSelected.valor= data.valor,
+    state.dataSelected.tipoServicio= data.tipoServicio,
+    state.dataSelected.retirarOficina= data.retirarOficina,
+    state.dataSelected.seguro= data.seguro
+}
 
 export function loadCouriers (state,data,error) {
     if (!error){
@@ -111,8 +128,28 @@ export function loadOficinas (state,data,error) {
     }
 }
 
+export function loadTarifa (state,data,error) {
+    if (!error){
+        state.dataSelected.tarifa=data
+    }else{
+        state.errorTarifa = error
+    }
+}
+
+export function generatedGuide (state,data,error) {
+    if (!error){
+        state.guide = data
+    }else{
+        state.errorGuide = error
+    }
+}
 
 
+
+
+
+
+// --------------------------------------------------------------------------
 function firstUpperCase(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
   }

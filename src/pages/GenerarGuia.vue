@@ -1,8 +1,9 @@
 <template>
   <q-page class="column justify-start q-py-md">
     <div class="row justify-center q-my-xl">
-      <div class="q-gutter-y-md column " style="max-width: 900px; min-width: 50%">
-        <!-- <couriers/> -->
+      <div class=" column col-12" style="max-width: 80%; min-width: 50%">
+        <h4>Generar Guía</h4>
+        <couriers/>
       </div>
     </div>
   </q-page>
@@ -10,11 +11,11 @@
 
 <script>
 import { defineComponent } from 'vue';
-// import couriers from '../components/courierDatos.vue'
+import couriers from '../components/courierDatos.vue'
 export default defineComponent({
-  name: 'PageIndex',
+  name: 'GenerarGuia',
   components:{
-    // couriers
+    couriers
   }
 })
 </script>
