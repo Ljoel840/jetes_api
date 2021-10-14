@@ -93,7 +93,7 @@
             </div>
         </div>
         <br>
-        <span class="text-h6">Tarifa Aproximada</span>
+        <span class="text-h6" v-if="dataSelected.tarifa.total">Tarifa Aproximada</span>
         <div class="row" v-if="dataSelected.tarifa.total">
             <div class="col-1 q-px-sm" >
                 <q-input v-model="dataSelected.tarifa.combustible" hint="Combustible" :dense="dense" disable />
@@ -224,7 +224,7 @@ export default defineComponent({
         validarDatos(this)
         if (!this.errorValidacion){
             this.cargarDatos()
-            // this.solicitarGuia()
+            this.solicitarGuia()
             this.calcularTarifa()
         }
         
