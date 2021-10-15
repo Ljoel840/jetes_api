@@ -1,5 +1,24 @@
+//---------- Inicializar List-----------------
+export function initCouriers (state) {
+    state.couriersList = []
+}
+export function initEstados (state) {
+    state.estadosList = []
+}
+export function initCiudades (state) {
+    state.ciudadesList = []
+}
+export function initMunicipios (state) {
+    state.municipiosList = []
+}
+export function initParroquias (state) {
+    state.parroquiasList = []
+}
+export function initOficinas (state) {
+    state.oficinasList = []
+}
 
-
+//---------- Actualizar List-----------------
 export function updateCourier (state,data) {
     state.dataSelected.courier = data
 }
@@ -18,6 +37,8 @@ export function updateParroquia (state,data) {
 export function updateOficina (state,data) {
     state.dataSelected.oficina = data
 }
+
+
 export function updateOtherData (state,data) {
     state.dataSelected.destinatario= data.destinatario,
     state.dataSelected.contacto= data.contacto,
@@ -36,7 +57,9 @@ export function updateOtherData (state,data) {
     state.dataSelected.seguro= data.seguro
 }
 
+//---------- Cargar List-----------------
 export function loadCouriers (state,data,error) {
+    state.errorList = null
     if (!error){
         state.couriersList=[]
         data.forEach(element => {
@@ -44,16 +67,17 @@ export function loadCouriers (state,data,error) {
             courierRecord.label = firstUpperCase(element.nombre)
             courierRecord.value = element._id
             courierRecord.category = 1
-            courierRecord.data = element
+            // courierRecord.data = element
             state.couriersList.push(courierRecord)
         });
        
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
 export function loadEstados (state,data,error) {
+    state.errorList = null
     if (!error){
         state.estadosList=[]
         data.forEach(element => {
@@ -64,11 +88,12 @@ export function loadEstados (state,data,error) {
             state.estadosList.push(estadosRecord)
         });
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
 export function loadCiudades (state,data,error) {
+    state.errorList = null
     if (!error){
         state.ciudadesList=[]
         data.forEach(element => {
@@ -79,11 +104,12 @@ export function loadCiudades (state,data,error) {
             state.ciudadesList.push(ciudadesRecord)
         });
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
 export function loadMunicipios (state,data,error) {
+    state.errorList = null
     if (!error){
         state.municipiosList=[]
         data.forEach(element => {
@@ -94,11 +120,12 @@ export function loadMunicipios (state,data,error) {
             state.municipiosList.push(municipiosRecord)
         });
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
 export function loadParroquias (state,data,error) {
+    state.errorList = null
     if (!error){
         state.parroquiasList=[]
         data.forEach(element => {
@@ -109,11 +136,12 @@ export function loadParroquias (state,data,error) {
             state.parroquiasList.push(parroquiasRecord)
         });
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
 export function loadOficinas (state,data,error) {
+    state.errorList = null
     if (!error){
         state.oficinasList=[]
         data.forEach(element => {
@@ -124,27 +152,54 @@ export function loadOficinas (state,data,error) {
             state.oficinasList.push(oficinasRecord)
         });
     }else{
-        state.error = error
+        state.errorList = error
     }
 }
 
+//--------------------------------------------------
 export function loadTarifa (state,data,error) {
+    state.tarifa.ok= false
+    state.tarifa.data={}
     if (!error){
-        state.dataSelected.tarifa=data
+        state.tarifa.data=data
+        state.tarifa.ok= true
     }else{
-        state.errorTarifa = error
+        state.tarifa.error = error
     }
 }
 
 export function generatedGuide (state,data,error) {
+    state.guide.ok = false
+    state.guide.data = {}
     if (!error){
-        state.guide = data
+        state.guide.data = data
+        state.guide.ok = true
     }else{
-        state.errorGuide = error
+        state.guide.error = error
     }
 }
 
+export function generatedTracking (state,data,error) {
+    state.tracking.ok= false
+    state.tracking.data={}
+    if (!error){
+        state.tracking.data=data
+        state.tracking.ok= true
+    }else{
+        state.tracking.error = error
+    }
+}
 
+export function generatedPdfGuide (state,data,error) {
+    state.pdfGuide.ok = false
+    state.pdfGuide.data = {}
+    if (!error){
+        state.pdfGuide.data = data
+        state.pdfGuide.ok = true
+    }else{
+        state.pdfGuide.error = error
+    }
+}
 
 
 

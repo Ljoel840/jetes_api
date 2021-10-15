@@ -78,3 +78,23 @@ export async function getTarifa ({commit,state},data) {
     })
 }
 
+export async function getTracking ({commit,state},data) {
+    await api.get(`/get/tracking?courier=${data.courier}&guia_id=${data.guia_id}&numero_guia=${data.numero_guia}`,state.configHeader)
+    .then((response) =>{
+        commit('generatedTracking',response.data,null)
+    }).catch(error => {
+        commit('generatedTracking',null,error)
+    })
+}
+
+export async function generatePdfGuide ({commit,state},data) {
+    await api.post(`/generar/pdf`,
+        data,
+        state.configHeader
+    )
+    .then((response) =>{
+        commit('generatedPdfGuide',response.data,null)
+    }).catch(error => {
+        commit('generatedPdfGuide',null,error)
+    })
+}

@@ -1,25 +1,24 @@
 <template>
     <div>
-
         <div class="row">
             <q-form class="q-gutter-md formulario row">
                 <div class="col-2">
                     <q-select v-model="courier" :options="couriersList" label="Couriers" @blur="actualizarCourier()"  @change="actualizarCourier()"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model= "estado" :options="estadosList" label="Estado" @blur="actualizarEstado()"  @change="actualizarEstado()"/>
+                    <q-select v-model= "estado" :options="estadosList" label="Estado" @blur="actualizarEstado()"  @change="actualizarEstado()" :disable="estadosList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model="ciudad" :options="ciudadesList" label="Ciudad" @blur="actualizarCiudad()"  />
+                    <q-select v-model="ciudad" :options="ciudadesList" label="Ciudad" @blur="actualizarCiudad()" :disable="ciudadesList.length<=0 ? true : false"  />
                 </div>
                 <div class="col-2">
-                    <q-select v-model="municipio" :options="municipiosList" label="Municipio" @blur="actualizarMunicipio()" />
+                    <q-select v-model="municipio" :options="municipiosList" label="Municipio" @blur="actualizarMunicipio()" :disable="municipiosList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model="parroquia" :options="parroquiasList" label="Parroquia" @blur="actualizarParroquia()" />
+                    <q-select v-model="parroquia" :options="parroquiasList" label="Parroquia" @blur="actualizarParroquia()" :disable="parroquiasList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model="oficina" :options="oficinasList" label="oficina" @blur="actualizarOficina()" />
+                    <q-select v-model="oficina" :options="oficinasList" label="oficina" @blur="actualizarOficina()" :disable="oficinasList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-12"></div>
                 <div class="col-2">
@@ -70,53 +69,127 @@
             </q-form>
         </div>
         <br>
+        <q-badge color="red" v-if="errorList">
+            {{errorList}}
+        </q-badge> 
         <q-badge color="red" v-if="errorValidacion">
             {{mensajeError}}
         </q-badge> 
         <br>
         <div class="row">
-            <q-btn :loading="generandoGuia" color="primary" @click="crearGuia()" style="width: 150px">
-            Crear Guía
-            <template v-slot:loading>
-                <q-spinner-hourglass class="on-left" />
-                Loading...
-            </template>
+            <q-btn :loading="generandoGuia" color="primary" @click="generarGuia()" style="width: 150px" class="q-ma-sm">
+                Crear Guía
+                <template v-slot:loading>
+                    <q-spinner-hourglass class="on-left" />
+                    Loading...
+                </template>
+            </q-btn>
+            <q-btn :loading="generandoTracking" color="primary" @click="generarTracking()" style="width: 150px" class="q-ma-sm">
+                Tracking
+                <template v-slot:loading>
+                    <q-spinner-hourglass class="on-left" />
+                    Loading...
+                </template>
+            </q-btn>
+            <q-btn :loading="generandoTarifa" color="primary" @click="generarTarifa()" style="width: 150px" class="q-ma-sm">
+                Tarifa
+                <template v-slot:loading>
+                    <q-spinner-hourglass class="on-left" />
+                    Loading...
+                </template>
+            </q-btn>
+            <q-btn :loading="generandoPdfGuia" color="primary" @click="generarPdfGuia()" style="width: 150px" class="q-ma-sm">
+                Generar PDF
+                <template v-slot:loading>
+                    <q-spinner-hourglass class="on-left" />
+                    Loading...
+                </template>
             </q-btn>
         </div>
         <br>
-        <div class="row">
+        <div class="row" v-if="guide.ok">
             <div class="col-2 q-px-sm">
-                <q-input v-model="guide.guia" hint="Guia" :dense="dense" disable />
+                <q-input v-model="guide.data.guia" hint="Guia" :dense="dense" disable />
             </div>
             <div class="col-2 q-px-sm">
-                <q-input v-model="guide.referencia" hint="Referencia" :dense="dense" disable />
+                <q-input v-model="guide.data.referencia" hint="Referencia" :dense="dense" disable />
             </div>
         </div>
+        <q-badge color="red" v-if="guide.error">
+            {{guide.error}}
+        </q-badge>
         <br>
-        <span class="text-h6" v-if="dataSelected.tarifa.total">Tarifa Aproximada</span>
-        <div class="row" v-if="dataSelected.tarifa.total">
+        <span class="text-h6" v-if="tarifa.ok">Tarifa Aproximada</span>
+        <div class="row" v-if="tarifa.ok">
             <div class="col-1 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.combustible" hint="Combustible" :dense="dense" disable />
+                <q-input v-model="tarifa.data.combustible" hint="Combustible" :dense="dense" disable />
             </div>
             <div class="col-1 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.flete" hint="Flete" :dense="dense" disable />
+                <q-input v-model="tarifa.data.flete" hint="Flete" :dense="dense" disable />
             </div>
             <div class="col-2 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.franqueo_postal" hint="Franqueo Postal" :dense="dense" disable />
+                <q-input v-model="tarifa.data.franqueo_postal" hint="Franqueo Postal" :dense="dense" disable />
             </div>
             <div class="col-1 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.iva" hint="Iva" :dense="dense" disable />
+                <q-input v-model="tarifa.data.iva" hint="Iva" :dense="dense" disable />
             </div>
             <div class="col-1 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.seguro" hint="Seguro" :dense="dense" disable />
+                <q-input v-model="tarifa.data.seguro" hint="Seguro" :dense="dense" disable />
             </div>
             <div class="col-1 q-px-sm" >
-                <q-input v-model="dataSelected.tarifa.subtotal" hint="SubTotal" :dense="dense" disable />
+                <q-input v-model="tarifa.data.subtotal" hint="SubTotal" :dense="dense" disable />
             </div>
             <div class="col-1 q-px-sm">
-                <q-input v-model="dataSelected.tarifa.total" hint="Total" :dense="dense" disable />
+                <q-input v-model="tarifa.data.total" hint="Total" :dense="dense" disable />
             </div>
         </div>
+        <q-badge color="red" v-if="tarifa.error">
+            {{tarifa.error}}
+        </q-badge>
+        <br>
+        <span class="text-h6" v-if="tracking.ok">Tracking</span>
+        <div class="row" v-if="tracking.ok">
+            <div class="col-1 q-px-sm" >
+                <q-input v-model="tracking.data.guia" hint="Guia" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm" >
+                <q-input v-model="tracking.data.referencia" hint="Referencia" :dense="dense" disable />
+            </div>
+            <div class="col-2 q-px-sm" >
+                <q-input v-model="tracking.data.codigo_cliente" hint="Código de Clinte" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm" >
+                <q-input v-model="tracking.data.fecha" hint="Fecha" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm" >
+                <q-input v-model="tracking.data.codigo_estatus" hint="Cod. Estatus" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm" >
+                <q-input v-model="tracking.data.estatus" hint="Estatus" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm">
+                <q-input v-model="tracking.data.descripcion_estatus" hint="Desc. Estatus" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm">
+                <q-input v-model="tracking.data.receptor" hint="Receptor" :dense="dense" disable />
+            </div>
+            <div class="col-1 q-px-sm">
+                <q-input v-model="tracking.data.hora" hint="Hora" :dense="dense" disable />
+            </div>
+        </div>
+        <q-badge color="red" v-if="tracking.error">
+            {{tracking.error}}
+        </q-badge>
+        <br>
+        <span class="text-h6" v-if="pdfGuide.ok">Guía en Pdf</span>
+        <div class="row" v-if="pdfGuide.ok">
+            <!-- <a download="documento" :href="pdfGuide.data.encode" title="Mostrar Guía PDF" target="_blank" /> -->
+            <object :data="`data:application/pdf;base64,${pdfGuide.data.value}`" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+        <q-badge color="red" v-if="pdfGuide.error">
+            {{pdfGuide.error}}
+        </q-badge>
+
     </div>
 </template>
 <script>
@@ -131,6 +204,9 @@ export default defineComponent({
     return {
       loading: true,
       generandoGuia: false,
+      generandoTracking: false,
+      generandoTarifa: false,
+      generandoPdfGuia: false,
       courier: '',
       estado: '',
       ciudad: '',
@@ -167,11 +243,12 @@ export default defineComponent({
         'municipiosList',
         'parroquiasList',
         'oficinasList',
+        'errorList',
         'dataSelected',
-        'errorGuide',
         'guide',
-        'errorTarifa'
-        
+        'tarifa',
+        'tracking',
+        'pdfGuide'
       ])
 
       
@@ -192,26 +269,41 @@ export default defineComponent({
     },
     actualizarCourier(){
       this.$store.commit('data/updateCourier',this.courier)
+      this.$store.commit('data/initEstados')
+      this.$store.commit('data/initCiudades')
+      this.$store.commit('data/initMunicipios')
+      this.$store.commit('data/initParroquias')
+      this.$store.commit('data/initOficinas')
       this.estado=null
       this.$store.dispatch('data/loadEstados',this.courier)
     },
     actualizarEstado(){
       this.$store.commit('data/updateEstado',this.estado)
+      this.$store.commit('data/initCiudades')
+      this.$store.commit('data/initMunicipios')
+      this.$store.commit('data/initParroquias')
+      this.$store.commit('data/initOficinas')
       this.ciudad=null
       this.$store.dispatch('data/loadCiudades',this.estado)
     },
     actualizarCiudad(){
       this.$store.commit('data/updateCiudad',this.ciudad)
+      this.$store.commit('data/initMunicipios')
+      this.$store.commit('data/initParroquias')
+      this.$store.commit('data/initOficinas')
       this.municipio=null
       this.$store.dispatch('data/loadMunicipios',this.ciudad)
     },
     actualizarMunicipio(){
       this.$store.commit('data/updateMunicipio',this.municipio)
+      this.$store.commit('data/initParroquias')
+      this.$store.commit('data/initOficinas')
       this.parroquia=null
       this.$store.dispatch('data/loadParroquias',{ciudad:this.ciudad,municipio:this.municipio})
     },
     actualizarParroquia(){
       this.$store.commit('data/updateParroquia',this.parroquia)
+      this.$store.commit('data/initOficinas')
       this.oficina=null
       this.$store.dispatch('data/loadOficinas',this.ciudad)
     },
@@ -219,21 +311,55 @@ export default defineComponent({
       this.$store.commit('data/updateOficina',this.oficina)
       
     },
-    crearGuia(){
-        
+    generarGuia(){
         validarDatos(this)
         if (!this.errorValidacion){
             this.cargarDatos()
             this.solicitarGuia()
-            this.calcularTarifa()
         }
-        
     },
+    generarTarifa(){
+        if (!this.guide.ok) {
+            this.generarGuia()
+        }
+        this.calcularTarifa()
+    },
+    generarTracking(){
+        if (!this.guide.ok) {
+            this.generarGuia()
+        }
+        this.solicitartracking()
+    },
+    generarPdfGuia(){
+        if (!this.guide.ok) {
+            this.generarGuia()
+        }
+        this.solicitarPdfGuia()
+    },
+    cargarDatos(){
+        this.$store.commit('data/updateOtherData',{
+                destinatario: this.destinatario,
+                contacto: this.contacto,
+                cirif: this.cirif,
+                telefono: this.telefono,
+                direccion: this.direccion,
+                inmueble: this.inmueble,
+                descripcionPaquete: this.descripcionPaquete,
+                referencia: this.referencia,
+                numeroPiezas: this.numeroPiezas,
+                peso: this.peso,
+                tipoEnvio: this.tipoEnvio,
+                valor: this.valor,
+                tipoServicio: this.tipoServicio,
+                retirarOficina: this.retirarOficina,
+                seguro: this.seguro
+            })
+    },
+
     async solicitarGuia(){
         try {
             this.generandoGuia=true
-            await this.$store.dispatch('data/generateGuide',
-                {
+            await this.$store.dispatch('data/generateGuide',{
                     courier: this.dataSelected.courier.value,
                     estado: this.dataSelected.estado.value,
                     ciudad: this.dataSelected.ciudad.value,
@@ -256,35 +382,32 @@ export default defineComponent({
                     oficina: this.dataSelected.oficina.value,
                     seguro: this.dataSelected.seguro
             })
-            this.generandoGuia=false
+            
         } catch (error) {
             console.error(error)
+        }finally{
+            this.generandoGuia=false
         }
     },
-    cargarDatos(){
-        this.$store.commit('data/updateOtherData',
-            {
-                destinatario: this.destinatario,
-                contacto: this.contacto,
-                cirif: this.cirif,
-                telefono: this.telefono,
-                direccion: this.direccion,
-                inmueble: this.inmueble,
-                descripcionPaquete: this.descripcionPaquete,
-                referencia: this.referencia,
-                numeroPiezas: this.numeroPiezas,
-                peso: this.peso,
-                tipoEnvio: this.tipoEnvio,
-                valor: this.valor,
-                tipoServicio: this.tipoServicio,
-                retirarOficina: this.retirarOficina,
-                seguro: this.seguro
+    async solicitartracking(){
+        try {
+            this.generandoTracking=true
+            await this.$store.dispatch('data/getTracking',{
+                courier: this.dataSelected.courier.value,
+                guia_id: this.guide.data._id,
+                numero_guia: this.guide.data.guia,
             })
+            console.log(this.tracking.data)
+        } catch (error) {
+            console.error(error)
+        }finally{
+            this.generandoTracking=false
+        }
     },
     async calcularTarifa(){
         let seguro = this.dataSelected.seguro ? 1:0
         let modalidad = this.dataSelected.retirarOficina ? 'oficina': 'puerta'
-        console.log('paso',this.dataSelected.courier.value,this.dataSelected.ciudad.value,this.dataSelected.numeroPiezas,this.dataSelected.peso,seguro,this.dataSelected.valor,this.dataSelected.tipoServicio,modalidad,this.dataSelected.oficina.value)
+        this.generandoTarifa = true
         try {
             await this.$store.dispatch('data/getTarifa',{
                 courier: this.dataSelected.courier.value,
@@ -297,12 +420,27 @@ export default defineComponent({
                 modalidadTarifa: modalidad,
                 oficina: this.dataSelected.oficina.value
             })
-            console.log(this.dataSelected.tarifa)
-            console.log(this.errorTarifa)
         } catch (error) {
-            
+            console.error(error)
+        } finally{
+            this.generandoTarifa = false
         }
-    }
+    },
+        async solicitarPdfGuia(){
+        try {
+            this.generandoPdfGuia=true
+            await this.$store.dispatch('data/generatePdfGuide',{
+                courier: this.dataSelected.courier.value,
+                guia_id: this.guide.data._id,
+                numero_guia: this.guide.data.guia,
+            })
+            console.log(this.pdfGuide.data)
+        } catch (error) {
+            console.error(error)
+        }finally{
+            this.generandoPdfGuia=false
+        }
+    },
 
   },
 })
