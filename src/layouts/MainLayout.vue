@@ -68,7 +68,7 @@ const linksList = [
     title: 'Calcular Tarifa',
     caption: 'Calcular Tarifa',
     icon: 'record_voice_over',
-    link: '/'
+    link: '/tarifa'
   },
 ];
 

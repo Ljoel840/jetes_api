@@ -106,17 +106,32 @@
                 </template>
             </q-btn>
         </div>
+        <q-dialog v-model="alerta">
+            <q-card>
+                <q-card-section>
+                <div class="text-h6">Error</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+                {{alertaMsg}}
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn flat label="OK" color="primary" v-close-popup />
+            </q-card-actions>
+            </q-card>
+        </q-dialog>
         <br>
-        <div class="row" v-if="guide.ok">
-            <div class="col-2 q-px-sm">
-                <q-input v-model="guide.data.guia" hint="Guia" :dense="dense" disable />
+        <div class="row" v-if="guia.ok">
+            <div class="col-2 q-px-sm" >
+                <q-input v-model="guia.data.guia" hint="Guia" :dense="dense" disable />
             </div>
             <div class="col-2 q-px-sm">
-                <q-input v-model="guide.data.referencia" hint="Referencia" :dense="dense" disable />
+                <q-input v-model="guia.data.referencia" hint="Referencia" :dense="dense" disable />
             </div>
         </div>
-        <q-badge color="red" v-if="guide.error">
-            {{guide.error}}
+        <q-badge color="red" v-if="guia.error">
+            {{guia.error}}
         </q-badge>
         <br>
         <span class="text-h6" v-if="tarifa.ok">Tarifa Aproximada</span>
@@ -181,13 +196,13 @@
             {{tracking.error}}
         </q-badge>
         <br>
-        <span class="text-h6" v-if="pdfGuide.ok">Guía en Pdf</span>
-        <div class="row" v-if="pdfGuide.ok">
-            <!-- <a download="documento" :href="pdfGuide.data.encode" title="Mostrar Guía PDF" target="_blank" /> -->
-            <object :data="`data:application/pdf;base64,${pdfGuide.data.value}`" type="application/pdf" width="100%" height="600px"></object>
+        <span class="text-h6" v-if="pdfGuia.ok">Guía en Pdf</span>
+        <div class="row" v-if="pdfGuia.ok">
+            <!-- <a download="documento" :href="pdfGuia.data.encode" title="Mostrar Guía PDF" target="_blank" /> -->
+            <object :data="`data:application/pdf;base64,${pdfGuia.data.value}`" type="application/pdf" width="100%" height="600px"></object>
         </div>
-        <q-badge color="red" v-if="pdfGuide.error">
-            {{pdfGuide.error}}
+        <q-badge color="red" v-if="pdfGuia.error">
+            {{pdfGuia.error}}
         </q-badge>
 
     </div>
@@ -203,6 +218,8 @@ export default defineComponent({
   data() {
     return {
       loading: true,
+      alerta: false,
+      alertaMsg:'',
       generandoGuia: false,
       generandoTracking: false,
       generandoTarifa: false,
@@ -245,11 +262,14 @@ export default defineComponent({
         'oficinasList',
         'errorList',
         'dataSelected',
-        'guide',
+        'guia',
         'tarifa',
         'tracking',
-        'pdfGuide'
-      ])
+        'pdfGuia'
+      ]),
+    //   alerta(){
+    //       return this.guia.error || this.tarifa.error || this.tracking.error || this.pdfGuia.error ? true : false
+    //   }
 
       
   },
@@ -319,19 +339,19 @@ export default defineComponent({
         }
     },
     generarTarifa(){
-        if (!this.guide.ok) {
+        if (!this.guia.ok) {
             this.generarGuia()
         }
         this.calcularTarifa()
     },
     generarTracking(){
-        if (!this.guide.ok) {
+        if (!this.guia.ok) {
             this.generarGuia()
         }
         this.solicitartracking()
     },
     generarPdfGuia(){
-        if (!this.guide.ok) {
+        if (!this.guia.ok) {
             this.generarGuia()
         }
         this.solicitarPdfGuia()
@@ -358,8 +378,9 @@ export default defineComponent({
 
     async solicitarGuia(){
         try {
+            this.alertaMsg = ''
             this.generandoGuia=true
-            await this.$store.dispatch('data/generateGuide',{
+            await this.$store.dispatch('data/generateGuia',{
                     courier: this.dataSelected.courier.value,
                     estado: this.dataSelected.estado.value,
                     ciudad: this.dataSelected.ciudad.value,
@@ -382,24 +403,36 @@ export default defineComponent({
                     oficina: this.dataSelected.oficina.value,
                     seguro: this.dataSelected.seguro
             })
-            
+            if (this.guia.error){
+                this.alerta = true
+                this.alertaMsg = this.guia.error
+            }
         } catch (error) {
             console.error(error)
+            this.alerta = true
+            this.alertaMsg = error
         }finally{
             this.generandoGuia=false
         }
     },
     async solicitartracking(){
         try {
+            this.alertaMsg = ''
             this.generandoTracking=true
             await this.$store.dispatch('data/getTracking',{
                 courier: this.dataSelected.courier.value,
-                guia_id: this.guide.data._id,
-                numero_guia: this.guide.data.guia,
+                guia_id: this.guia.data._id,
+                numero_guia: this.guia.data.guia,
             })
+            if (this.tracking.error){
+                this.alerta = true
+                this.alertaMsg = this.tracking.error
+            }
             console.log(this.tracking.data)
         } catch (error) {
             console.error(error)
+            this.alerta = true
+            this.alertaMsg = error
         }finally{
             this.generandoTracking=false
         }
@@ -408,6 +441,7 @@ export default defineComponent({
         let seguro = this.dataSelected.seguro ? 1:0
         let modalidad = this.dataSelected.retirarOficina ? 'oficina': 'puerta'
         this.generandoTarifa = true
+        this.alertaMsg = ''
         try {
             await this.$store.dispatch('data/getTarifa',{
                 courier: this.dataSelected.courier.value,
@@ -420,23 +454,35 @@ export default defineComponent({
                 modalidadTarifa: modalidad,
                 oficina: this.dataSelected.oficina.value
             })
+            if (this.tarifa.error){
+                this.alerta = true
+                this.alertaMsg = this.tarifa.error
+            }
         } catch (error) {
             console.error(error)
+            this.alerta = true
+            this.alertaMsg = error
         } finally{
             this.generandoTarifa = false
         }
     },
         async solicitarPdfGuia(){
         try {
+            this.alertaMsg = ''
             this.generandoPdfGuia=true
-            await this.$store.dispatch('data/generatePdfGuide',{
+            await this.$store.dispatch('data/generatePdfGuia',{
                 courier: this.dataSelected.courier.value,
-                guia_id: this.guide.data._id,
-                numero_guia: this.guide.data.guia,
+                guia_id: this.guia.data._id,
+                numero_guia: this.guia.data.guia,
             })
-            console.log(this.pdfGuide.data)
+            if (this.pdfGuia.error){
+                this.alerta = true
+                this.alertaMsg = this.pdfGuia.error
+            }
         } catch (error) {
             console.error(error)
+            this.alerta = true
+            this.alertaMsg = error
         }finally{
             this.generandoPdfGuia=false
         }

@@ -3,7 +3,7 @@
     <div class="row justify-center q-my-xl">
       <div class=" column col-12" style="max-width: 80%; min-width: 50%">
         <h4>Calcular Tarifa</h4>
-        <formulario tituloBoton="Calcular Tarifa" @aceptar="obtenerTarifa()"/>
+        <formulario tituloBoton="Calcular" @aceptar="obtenerTarifa()"/>
         <span class="text-h6" v-if="tarifa.ok">Resultados</span>
         <div class="row" v-if="tarifa.ok">
             <div class="col-1 q-px-sm" >
@@ -62,7 +62,7 @@ export default defineComponent({
       
   },
   methods:{
-    obtenerFatura(){
+    obtenerTarifa(){
       console.log('Tarifa')
     },
   },

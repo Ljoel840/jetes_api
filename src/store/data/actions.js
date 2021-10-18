@@ -1,70 +1,72 @@
 import { api } from 'boot/axios'
-
 export async function loadCouriers ({commit}) {
     await api.get(`/get/couriers`)
     .then((response) =>{
-        commit('loadCouriers',response.data,null)
+        commit('loadCouriers',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadCouriers',null,error)
+        commit('loadCouriers',{data:null,error:error})
     })
 }
 
 export async function loadEstados ({commit},data) {
     await api.get(`/get/estados?courier=${data.value}`)
     .then((response) =>{
-        commit('loadEstados',response.data,null)
+        commit('loadEstados',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadEstados',null,error)
+        commit('loadEstados',{data:null,error:error})
     })
 }
 
 export async function loadCiudades ({commit},data) {
     await api.get(`/get/ciudades?estado=${data.value}`)
     .then((response) =>{
-        commit('loadCiudades',response.data,null)
+        commit('loadCiudades',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadCiudades',null,error)
+        commit('loadCiudades',{data:null,error:error})
     })
 }
 
 export async function loadMunicipios ({commit},data) {
     await api.get(`/get/municipios?ciudad=${data.value}`)
     .then((response) =>{
-        commit('loadMunicipios',response.data,null)
+        commit('loadMunicipios',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadMunicipios',null,error)
+        commit('loadMunicipios',{data:null,error:error})
     })
 }
 
 export async function loadParroquias ({commit},data) {
     await api.get(`/get/parroquias?ciudad=${data.ciudad.value}&municipio=${data.municipio.value}`)
     .then((response) =>{
-        commit('loadParroquias',response.data,null)
+        commit('loadParroquias',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadParroquias',null,error)
+        commit('loadParroquias',{data:null,error:error})
     })
 }
 
 export async function loadOficinas ({commit},data) {
     await api.get(`/get/oficinas?ciudad=${data.value}`)
     .then((response) =>{
-        commit('loadOficinas',response.data,null)
+        commit('loadOficinas',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadOficinas',null,error)
+        commit('loadOficinas',{data:null,error:error})
     })
 }
 
 
 
-export async function generateGuide ({commit,state},data) {
+export async function generateGuia ({commit,state},data) {
     await api.post(`/generar/guia`,
         data,
         state.configHeader
     )
     .then((response) =>{
-        commit('generatedGuide',response.data,null)
+        commit('generatedGuia',{data:response.data,error:null})
+        console.log('Response:',response)
     }).catch(error => {
-        commit('generatedGuide',null,error)
+        // errorMsg = 'Error: Request failed with status code 500'
+        // console.log(error)
+        commit('generatedGuia',{data:null,error:error})
     })
 }
 
@@ -72,29 +74,30 @@ export async function generateGuide ({commit,state},data) {
 export async function getTarifa ({commit,state},data) {
     await api.get(`/get/calcularTarifa?courier=${data.courier}&ciudad=${data.ciudad}&cantidadPiezas=${data.cantidadPiezas}&peso=${data.peso}&seguro=${data.seguro}&valor=${data.valor}&tipoTarifa=${data.tipoTarifa}&modalidadTarifa=${data.modalidadTarifa}&oficina=${data.oficina}`,state.configHeader)
     .then((response) =>{
-        commit('loadTarifa',response.data,null)
+        commit('loadTarifa',{data:response.data,error:null})
     }).catch(error => {
-        commit('loadTarifa',null,error)
+        commit('loadTarifa',{data:null,error:error})
     })
 }
 
 export async function getTracking ({commit,state},data) {
+    console.log(`/get/tracking?courier=${data.courier}&guia_id=${data.guia_id}&numero_guia=${data.numero_guia}`)
     await api.get(`/get/tracking?courier=${data.courier}&guia_id=${data.guia_id}&numero_guia=${data.numero_guia}`,state.configHeader)
     .then((response) =>{
-        commit('generatedTracking',response.data,null)
+        commit('generatedTracking',{data:response.data,error:null})
     }).catch(error => {
-        commit('generatedTracking',null,error)
+        commit('generatedTracking',{data:null,error:error})
     })
 }
 
-export async function generatePdfGuide ({commit,state},data) {
+export async function generatePdfGuia ({commit,state},data) {
     await api.post(`/generar/pdf`,
         data,
         state.configHeader
     )
     .then((response) =>{
-        commit('generatedPdfGuide',response.data,null)
+        commit('generatedPdfGuia',{data:response.data,error:null})
     }).catch(error => {
-        commit('generatedPdfGuide',null,error)
+        commit('generatedPdfGuia',{data:null,error:error})
     })
 }

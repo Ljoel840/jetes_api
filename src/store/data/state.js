@@ -44,15 +44,16 @@ export default function () {
       ok: false,
     },
     errorList: null,
-    guide:{
+    guia:{
       data:{},
       error:null,
       ok: false,
     },
-    pdfGuide:{
+    pdfGuia:{
       data:{},
       error:null,
       ok: false,
-    }
+    },
+    error: null
   }
 }

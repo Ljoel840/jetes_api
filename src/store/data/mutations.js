@@ -58,11 +58,11 @@ export function updateOtherData (state,data) {
 }
 
 //---------- Cargar List-----------------
-export function loadCouriers (state,data,error) {
+export function loadCouriers (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.couriersList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var courierRecord = new Object
             courierRecord.label = firstUpperCase(element.nombre)
             courierRecord.value = element._id
@@ -72,15 +72,15 @@ export function loadCouriers (state,data,error) {
         });
        
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
-export function loadEstados (state,data,error) {
+export function loadEstados (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.estadosList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var estadosRecord = new Object
             estadosRecord.label =element.nombre
             estadosRecord.value = element._id
@@ -88,15 +88,15 @@ export function loadEstados (state,data,error) {
             state.estadosList.push(estadosRecord)
         });
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
-export function loadCiudades (state,data,error) {
+export function loadCiudades (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.ciudadesList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var ciudadesRecord = new Object
             ciudadesRecord.label =element.nombre
             ciudadesRecord.value = element._id
@@ -104,15 +104,15 @@ export function loadCiudades (state,data,error) {
             state.ciudadesList.push(ciudadesRecord)
         });
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
-export function loadMunicipios (state,data,error) {
+export function loadMunicipios (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.municipiosList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var municipiosRecord = new Object
             municipiosRecord.label =element.nombre
             municipiosRecord.value = element._id
@@ -120,15 +120,15 @@ export function loadMunicipios (state,data,error) {
             state.municipiosList.push(municipiosRecord)
         });
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
-export function loadParroquias (state,data,error) {
+export function loadParroquias (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.parroquiasList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var parroquiasRecord = new Object
             parroquiasRecord.label =element.nombre
             parroquiasRecord.value = element._id
@@ -136,15 +136,15 @@ export function loadParroquias (state,data,error) {
             state.parroquiasList.push(parroquiasRecord)
         });
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
-export function loadOficinas (state,data,error) {
+export function loadOficinas (state,data) {
     state.errorList = null
-    if (!error){
+    if (!data.error){
         state.oficinasList=[]
-        data.forEach(element => {
+        data.data.forEach(element => {
             var oficinasRecord = new Object
             oficinasRecord.label =element.nombre
             oficinasRecord.value = element._id
@@ -152,56 +152,58 @@ export function loadOficinas (state,data,error) {
             state.oficinasList.push(oficinasRecord)
         });
     }else{
-        state.errorList = error
+        state.errorList = data.error
     }
 }
 
 //--------------------------------------------------
-export function loadTarifa (state,data,error) {
+export function loadTarifa (state,data) {
     state.tarifa.ok= false
+    state.tarifa.error = null
     state.tarifa.data={}
-    if (!error){
-        state.tarifa.data=data
+    if (!data.error){
+        state.tarifa.data=data.data
         state.tarifa.ok= true
     }else{
-        state.tarifa.error = error
+        state.tarifa.error = data.error
     }
 }
 
-export function generatedGuide (state,data,error) {
-    state.guide.ok = false
-    state.guide.data = {}
-    if (!error){
-        state.guide.data = data
-        state.guide.ok = true
+export function generatedGuia (state,data) {
+    state.guia.ok = false
+    state.guia.error = null
+    state.guia.data = {}
+    if (!data.error){
+        state.guia.data = data.data
+        state.guia.ok = true
     }else{
-        state.guide.error = error
+        state.guia.error = data.error
     }
 }
 
-export function generatedTracking (state,data,error) {
+export function generatedTracking (state,data) {
     state.tracking.ok= false
+    state.tracking.error = null
     state.tracking.data={}
-    if (!error){
-        state.tracking.data=data
+    if (!data.error){
+        state.tracking.data=data.data
         state.tracking.ok= true
     }else{
-        state.tracking.error = error
+        state.tracking.error = data.error
     }
 }
 
-export function generatedPdfGuide (state,data,error) {
-    state.pdfGuide.ok = false
-    state.pdfGuide.data = {}
-    if (!error){
-        state.pdfGuide.data = data
-        state.pdfGuide.ok = true
+export function generatedPdfGuide (state,data) {
+    state.pdfGuia.ok = false
+    state.pdfGuia.error = null
+    state.pdfGuia.data = {}
+    if (!data.error){
+        state.pdfGuia.data = data.data
+        state.pdfGuia.ok = true
     }else{
-        state.pdfGuide.error = error
+        state.pdfGuia.error = data.error
     }
 }
-
-
 
 
 // --------------------------------------------------------------------------
