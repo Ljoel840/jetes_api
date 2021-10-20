@@ -105,6 +105,13 @@
                     Loading...
                 </template>
             </q-btn>
+            <q-btn :loading="limpiando" color="secondary" @click="limpiar()" style="width: 150px" class="q-ma-sm">
+                Limpiar
+                <template v-slot:loading>
+                    <q-spinner-hourglass class="on-left" />
+                    Loading...
+                </template>
+            </q-btn>
         </div>
         <q-dialog v-model="alerta">
             <q-card>
@@ -134,32 +141,45 @@
             {{guia.error}}
         </q-badge>
         <br>
-        <span class="text-h6" v-if="tarifa.ok">Tarifa Aproximada</span>
-        <div class="row" v-if="tarifa.ok">
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.combustible" hint="Combustible" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.flete" hint="Flete" :dense="dense" disable />
-            </div>
-            <div class="col-2 q-px-sm" >
-                <q-input v-model="tarifa.data.franqueo_postal" hint="Franqueo Postal" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.iva" hint="Iva" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.seguro" hint="Seguro" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.subtotal" hint="SubTotal" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm">
-                <q-input v-model="tarifa.data.total" hint="Total" :dense="dense" disable />
-            </div>
-        </div>
+        <q-dialog v-model="tarifaModal">
+            <q-card>
+                <q-card-section>
+                <div class="text-h6">Tarifa Aproximada</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+                <div class="row" v-if="tarifa.ok">
+                    <div class="col-2 q-px-sm" >
+                        <q-input v-model="tarifa.data.combustible" hint="Combustible" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-1 q-px-sm" >
+                        <q-input v-model="tarifa.data.flete" hint="Flete" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-2 q-px-sm" >
+                        <q-input v-model="tarifa.data.franqueo_postal" hint="Franqueo Postal" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-1 q-px-sm" >
+                        <q-input v-model="tarifa.data.iva" hint="Iva" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-2 q-px-sm" >
+                        <q-input v-model="tarifa.data.seguro" hint="Seguro" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-2 q-px-sm" >
+                        <q-input v-model="tarifa.data.subtotal" hint="SubTotal" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                    <div class="col-2 q-px-sm">
+                        <q-input v-model="tarifa.data.total" hint="TOTAL" :dense="dense" disable class="text-weight-bold"/>
+                    </div>
+                </div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn flat label="OK" color="primary" v-close-popup />
+            </q-card-actions>
+            </q-card>
+        </q-dialog>
         <q-badge color="red" v-if="tarifa.error">
-            {{tarifa.error}}
+            Tarifa: {{tarifa.error}}
         </q-badge>
         <br>
         <span class="text-h6" v-if="tracking.ok">Tracking</span>
@@ -193,16 +213,29 @@
             </div>
         </div>
         <q-badge color="red" v-if="tracking.error">
-            {{tracking.error}}
+           Tracking: {{tracking.error}}
         </q-badge>
         <br>
-        <span class="text-h6" v-if="pdfGuia.ok">Guía en Pdf</span>
-        <div class="row" v-if="pdfGuia.ok">
-            <!-- <a download="documento" :href="pdfGuia.data.encode" title="Mostrar Guía PDF" target="_blank" /> -->
-            <object :data="`data:application/pdf;base64,${pdfGuia.data.value}`" type="application/pdf" width="100%" height="600px"></object>
-        </div>
+        
+        <q-dialog v-model="pdfModal" full-width>
+            <q-card>
+                <q-card-section>
+                <div class="text-h6">Guía PDF</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none scroll" style="max-height: 60vh">
+                <div class="row" v-if="pdfGuia.ok">
+                    <object :data="`data:application/pdf;base64,${pdfGuia.data.value}`" type="application/pdf" width="100%" height="600px"></object>
+                </div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn flat label="OK" color="primary" v-close-popup />
+            </q-card-actions>
+            </q-card>
+        </q-dialog>
         <q-badge color="red" v-if="pdfGuia.error">
-            {{pdfGuia.error}}
+           Pdf: {{pdfGuia.error}}
         </q-badge>
 
     </div>
@@ -219,22 +252,25 @@ export default defineComponent({
     return {
       loading: true,
       alerta: false,
+      tarifaModal: false,
+      pdfModal: false,
       alertaMsg:'',
       generandoGuia: false,
       generandoTracking: false,
       generandoTarifa: false,
       generandoPdfGuia: false,
+      limpiando: false,
       courier: '',
       estado: '',
       ciudad: '',
       municipio: '',
       parroquia:'',
       oficina:'',
-      destinatario:'Joel',
-      contacto:'Joel',
+      destinatario:'Joel Leal',
+      contacto:'Ana ',
       cirif:'11785840',
       telefono:'04145281112',
-      direccion:'Calle 22',
+      direccion:'Dirección Prueba',
       inmueble:'Casa',
       descripcionPaquete:'Caja',
       referencia:'1234',
@@ -457,6 +493,8 @@ export default defineComponent({
             if (this.tarifa.error){
                 this.alerta = true
                 this.alertaMsg = this.tarifa.error
+            }else{
+                this.tarifaModal = true
             }
         } catch (error) {
             console.error(error)
@@ -466,7 +504,7 @@ export default defineComponent({
             this.generandoTarifa = false
         }
     },
-        async solicitarPdfGuia(){
+    async solicitarPdfGuia(){
         try {
             this.alertaMsg = ''
             this.generandoPdfGuia=true
@@ -478,6 +516,8 @@ export default defineComponent({
             if (this.pdfGuia.error){
                 this.alerta = true
                 this.alertaMsg = this.pdfGuia.error
+            }else{
+                this.pdfModal = true
             }
         } catch (error) {
             console.error(error)
@@ -487,6 +527,28 @@ export default defineComponent({
             this.generandoPdfGuia=false
         }
     },
+    limpiar(){
+        this.$store.commit('data/initDatos')    
+        this.loading= true
+        this.alerta= false
+        this.tarifaModal= false
+        this.pdfModal= false
+        this.alertaMsg=''
+        this.generandoGuia= false
+        this.generandoTracking= false
+        this.generandoTarifa= false
+        this.generandoPdfGuia= false
+        this.limpiando= false
+        this.courier= ''
+        this.estado= ''
+        this.ciudad= ''
+        this.municipio= ''
+        this.parroquia=''
+        this.oficina=''
+        this.errorValidacion= false
+        this.mensajeError= null
+        this.dense= false
+    }
 
   },
 })

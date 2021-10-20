@@ -56,13 +56,13 @@ const linksList = [
     title: 'Generar pdf',
     caption: 'Generar pdf',
     icon: 'code',
-    link: '/'
+    link: '/generarpdf'
   },
   {
     title: 'Tracking',
     caption: 'Tracking',
     icon: 'chat',
-    link: '/'
+    link: '/tracking'
   },
   {
     title: 'Calcular Tarifa',

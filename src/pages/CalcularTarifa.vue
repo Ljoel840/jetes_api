@@ -3,35 +3,7 @@
     <div class="row justify-center q-my-xl">
       <div class=" column col-12" style="max-width: 80%; min-width: 50%">
         <h4>Calcular Tarifa</h4>
-        <formulario tituloBoton="Calcular" @aceptar="obtenerTarifa()"/>
-        <span class="text-h6" v-if="tarifa.ok">Resultados</span>
-        <div class="row" v-if="tarifa.ok">
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.combustible" hint="Combustible" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.flete" hint="Flete" :dense="dense" disable />
-            </div>
-            <div class="col-2 q-px-sm" >
-                <q-input v-model="tarifa.data.franqueo_postal" hint="Franqueo Postal" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.iva" hint="Iva" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.seguro" hint="Seguro" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tarifa.data.subtotal" hint="SubTotal" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm">
-                <q-input v-model="tarifa.data.total" hint="Total" :dense="dense" disable />
-            </div>
-        </div>
-        <q-badge color="red" v-if="tarifa.error">
-            {{tarifa.error}}
-        </q-badge>
-
+        <h1>PROXIMAMENTE</h1>
       </div>
     </div>
   </q-page>
@@ -40,11 +12,11 @@
 <script>
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex'
-import formulario from '../components/formulario.vue'
+// import formulario from '../components/formulario.vue'
 export default defineComponent({
   name: 'CalcularTarifa',
   components:{
-    formulario
+    // formulario
   },
     data() {
     return {

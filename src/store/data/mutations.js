@@ -17,6 +17,48 @@ export function initParroquias (state) {
 export function initOficinas (state) {
     state.oficinasList = []
 }
+export function initDatos(state){
+    //state.couriersList=[]
+    state.estadosList=[]
+    state.ciudadesList=[]
+    state.municipiosList=[]
+    state.parroquiasList=[]
+    state.oficinasList=[]
+    state.tarifa.ok= false
+    state.tarifa.error = null
+    state.tarifa.data={}
+    state.guia.ok = false
+    state.guia.error = null
+    state.guia.data = {}
+    state.tracking.ok= false
+    state.tracking.error = null
+    state.tracking.data={}
+    state.pdfGuia.ok = false
+    state.pdfGuia.error = null
+    state.pdfGuia.data = {}
+    state.dataSelected.courier={}
+    state.dataSelected.estado={}
+    state.dataSelected.ciudad={}
+    state.dataSelected.municipio={}
+    state.dataSelected.parroquia={}
+    state.dataSelected.oficina={}
+    state.dataSelected.destinatario= ''
+    state.dataSelected.contacto=''
+    state.dataSelected.cirif=''
+    state.dataSelected.telefono=''
+    state.dataSelected.direccion=''
+    state.dataSelected.inmueble=''
+    state.dataSelected.descripcionPaquete=''
+    state.dataSelected.referencia=''
+    state.dataSelected.numeroPiezas=0
+    state.dataSelected.peso=0
+    state.dataSelected.tipoEnvio=''
+    state.dataSelected.valor=0
+    state.dataSelected.tipoServicio=''
+    state.dataSelected.retirarOficina=true
+    state.dataSelected.seguro=true
+      
+}
 
 //---------- Actualizar List-----------------
 export function updateCourier (state,data) {
@@ -193,7 +235,7 @@ export function generatedTracking (state,data) {
     }
 }
 
-export function generatedPdfGuide (state,data) {
+export function generatedPdfGuia (state,data) {
     state.pdfGuia.ok = false
     state.pdfGuia.error = null
     state.pdfGuia.data = {}
