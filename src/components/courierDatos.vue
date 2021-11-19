@@ -18,7 +18,7 @@
                     <q-select v-model="parroquia" :options="parroquiasList" label="Parroquia" @blur="actualizarParroquia()" :disable="parroquiasList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model="oficina" :options="oficinasList" label="oficina" @blur="actualizarOficina()" :disable="oficinasList.length<=0 ? true : false"/>
+                    <q-select v-model="oficina" :options="oficinasList" label="oficina" @blur="actualizarOficina()" :disable="oficinasList.length<=0 || isLiberty ? true : false"/>
                 </div>
                 <div class="col-12"></div>
                 <div class="col-2">
@@ -61,7 +61,7 @@
                     <q-input v-model="tipoServicio" label="Tipo de Servicio" /> 
                 </div>
                 <div class="col-2">
-                    <q-toggle v-model="retirarOficina" label="Retirar en la Oficina" />
+                    <q-toggle v-model="retirarOficina" label="Retirar en la Oficina" :disable="isLiberty ? true:false" />
                 </div>
                 <div class="col-2">
                     <q-toggle v-model="seguro" label="Seguro" />
@@ -283,14 +283,14 @@ export default defineComponent({
       seguro: true,
       errorValidacion: false,
       mensajeError: null,
-      dense: false
+      dense: false,
+      isLiberty: false,
 
     }
   },
   computed: {
       ...mapState('data', [
         'couriersList',
-        'courierSelected',
         'estadosList',
         'ciudadesList',
         'municipiosList',
@@ -324,6 +324,14 @@ export default defineComponent({
       }
     },
     actualizarCourier(){
+      if (this.courier.label == 'Liberty'){
+          this.isLiberty=true
+          this.retirarOficina= false
+      }else{
+          this.isLiberty=false
+          this.retirarOficina= true
+      }
+      console.log(this.isLiberty)
       this.$store.commit('data/updateCourier',this.courier)
       this.$store.commit('data/initEstados')
       this.$store.commit('data/initCiudades')

@@ -6,7 +6,7 @@ export default (context) => {
         !context.ciudad ||
         !context.municipio ||
         !context.parroquia ||
-        !context.oficina ||
+        //!context.oficina ||
         !context.destinatario ||
         !context.contacto ||
         !context.cirif ||
