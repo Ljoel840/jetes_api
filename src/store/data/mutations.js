@@ -59,6 +59,11 @@ export function initDatos(state){
     state.dataSelected.seguro=true
       
 }
+export function initTracking (state) {
+    state.tracking.data = {}
+    state.tracking.error = null
+    state.tracking.ok = false
+}
 
 //---------- Actualizar List-----------------
 export function updateCourier (state,data) {

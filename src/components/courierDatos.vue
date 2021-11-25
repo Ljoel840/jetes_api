@@ -18,7 +18,7 @@
                     <q-select v-model="parroquia" :options="parroquiasList" label="Parroquia" @blur="actualizarParroquia()" :disable="parroquiasList.length<=0 ? true : false"/>
                 </div>
                 <div class="col-2">
-                    <q-select v-model="oficina" :options="oficinasList" label="oficina" @blur="actualizarOficina()" :disable="oficinasList.length<=0 || isLiberty ? true : false"/>
+                    <q-select v-model="oficina" :options="oficinasList" label="Oficina" @blur="actualizarOficina()" :disable="oficinasList.length<=0 || isLiberty ? true : false"/>
                 </div>
                 <div class="col-12"></div>
                 <div class="col-2">
@@ -184,33 +184,42 @@
         <br>
         <span class="text-h6" v-if="tracking.ok">Tracking</span>
         <div class="row" v-if="tracking.ok">
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tracking.data.guia" hint="Guia" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tracking.data.referencia" hint="Referencia" :dense="dense" disable />
-            </div>
-            <div class="col-2 q-px-sm" >
-                <q-input v-model="tracking.data.codigo_cliente" hint="Código de Clinte" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tracking.data.fecha" hint="Fecha" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tracking.data.codigo_estatus" hint="Cod. Estatus" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm" >
-                <q-input v-model="tracking.data.estatus" hint="Estatus" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm">
-                <q-input v-model="tracking.data.descripcion_estatus" hint="Desc. Estatus" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm">
-                <q-input v-model="tracking.data.receptor" hint="Receptor" :dense="dense" disable />
-            </div>
-            <div class="col-1 q-px-sm">
-                <q-input v-model="tracking.data.hora" hint="Hora" :dense="dense" disable />
-            </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.guia" hint="Guia" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.referencia" hint="Referencia" :dense="dense" disable />
+          </div>
+          <div class="col-2 q-px-sm" >
+              <q-input v-model="tracking.data.codigo_cliente" hint="Código de Clinte" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm">
+              <q-input v-model="tracking.data.receptor" hint="Receptor" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.fecha" hint="Fecha" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.codigo_estatus" hint="Cod. Estatus" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.siglas" hint="Siglas" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm">
+              <q-input v-model="tracking.data.hora" hint="Hora" :dense="dense" disable />
+          </div>
+          <div class="col-6 q-px-sm">
+              <q-input v-model="tracking.data.descripcion_estatus" hint="Desc. Estatus" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.fechapro" hint="Fecha Pro." :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm" >
+              <q-input v-model="tracking.data.sello" hint="Sello" :dense="dense" disable />
+          </div>
+          <div class="col-1 q-px-sm">
+              <q-input v-model="tracking.data.codtipo" hint="Cod. Tipo" :dense="dense" disable />
+          </div>
         </div>
         <q-badge color="red" v-if="tracking.error">
            Tracking: {{tracking.error}}
@@ -311,6 +320,7 @@ export default defineComponent({
   },
   mounted() {
       this.getCouriers()
+      this.$store.commit('data/initTracking')
   },
 
   methods: {
@@ -465,14 +475,12 @@ export default defineComponent({
             this.generandoTracking=true
             await this.$store.dispatch('data/getTracking',{
                 courier: this.dataSelected.courier.value,
-                guia_id: this.guia.data._id,
                 numero_guia: this.guia.data.guia,
             })
             if (this.tracking.error){
                 this.alerta = true
                 this.alertaMsg = this.tracking.error
             }
-            console.log(this.tracking.data)
         } catch (error) {
             console.error(error)
             this.alerta = true

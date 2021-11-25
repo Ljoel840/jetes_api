@@ -56,6 +56,7 @@ export async function loadOficinas ({commit},data) {
 
 
 export async function generateGuia ({commit,state},data) {
+    console.log(data)
     await api.post(`/generar/guia`,
         data,
         state.configHeader
@@ -81,8 +82,7 @@ export async function getTarifa ({commit,state},data) {
 }
 
 export async function getTracking ({commit,state},data) {
-    console.log(`/get/tracking?courier=${data.courier}&guia_id=${data.guia_id}&numero_guia=${data.numero_guia}`)
-    await api.get(`/get/tracking?courier=${data.courier}&guia_id=${data.guia_id}&numero_guia=${data.numero_guia}`,state.configHeader)
+    await api.get(`/get/tracking?courier=${data.courier}&numero_guia=${data.numero_guia}`,state.configHeader)
     .then((response) =>{
         commit('generatedTracking',{data:response.data,error:null})
     }).catch(error => {
