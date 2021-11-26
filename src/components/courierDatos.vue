@@ -52,13 +52,15 @@
                     <q-input v-model="peso" type="number" label="Peso" /> 
                 </div>
                 <div class="col-2">
-                    <q-input v-model="tipoEnvio" label="Tipo de Envio" /> 
+                    <!-- <q-input v-model="tipoEnvio" label="Tipo de Envio" />  -->
+                     <q-select v-model="tipoEnvio" :options="envios" label="Tipo deEnvío" />
                 </div>
                 <div class="col-2">
                     <q-input v-model="valor" type="number" label="Valor" /> 
                 </div>
                 <div class="col-2">
-                    <q-input v-model="tipoServicio" label="Tipo de Servicio" /> 
+                    <!-- <q-input v-model="tipoServicio" label="Tipo de Servicio" />  -->
+                    <q-select v-model="tipoServicio" :options="servicios" label="Tipo de Servicio" />
                 </div>
                 <div class="col-2">
                     <q-toggle v-model="retirarOficina" label="Retirar en la Oficina" :disable="isLiberty ? true:false" />
@@ -294,7 +296,30 @@ export default defineComponent({
       mensajeError: null,
       dense: false,
       isLiberty: false,
-
+      servicios: [
+          {
+              label: 'Cobro Destino',
+              value: 'cod',
+              category: 1
+          },
+          {
+              label: 'Pago Contado',
+              value: 'contado',
+              category: 2
+          }
+      ],
+      envios: [
+          {
+              label: 'Mercancia',
+              value: 'M',
+              category: 1
+          },
+          {
+              label: 'Documento',
+              value: 'D',
+              category: 2
+          }
+      ],
     }
   },
   computed: {
