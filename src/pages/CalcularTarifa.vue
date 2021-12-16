@@ -3,7 +3,7 @@
     <div class="row justify-center q-my-xl">
       <div class=" column col-12" style="max-width: 80%; min-width: 50%">
         <h4>Calcular Tarifa</h4>
-        <h1>PROXIMAMENTE</h1>
+        <tarifaDatos/>
       </div>
     </div>
   </q-page>
@@ -12,11 +12,11 @@
 <script>
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex'
-// import formulario from '../components/formulario.vue'
+import tarifaDatos from '../components/tarifaDatos.vue'
 export default defineComponent({
   name: 'CalcularTarifa',
   components:{
-    // formulario
+    tarifaDatos
   },
     data() {
     return {
